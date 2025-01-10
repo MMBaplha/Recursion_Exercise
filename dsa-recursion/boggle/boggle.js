@@ -53,8 +53,48 @@ function makeBoard(boardString) {
 function find(board, word) {
   /** Can word be found in board? */
   // TODO
+  const rows = board.length;
+  const cols = board[0].length;
+
+  const directions = [
+    [-1, 0], // north
+    [1, 0], // south
+    [0, -1], // west
+    [1, 0], // east
+  ];
+
+  function dfs(r, c, wordIndex, visited) {
+    if (wordIndex === word.length) return true;
+
+    if (
+      r < 0 || r >= rows || c < 0 || c >= cols || // out bounds
+      visited.has(`${r}, ${c}`) || // already visited
+      board[r][c] !== wprd[wordIndex] // Mismatch
+    ) {
+      return false;
+    }
+
+    visited.add(`${r}, ${c}`);
+
+    for (const [dr, dc] of directions) {
+      if (dfs(r + dr, c + dc, wordIndex + 1, visited)) {
+        return true;
+      }
+  }
+
+  visited.delete(`${r},${c}`);
+  return false;
 }
 
+  for (let r = 0; r < rows; r++) {
+    for(let c =0; c < cols; c++) {
+      if (dfs(r, c, 0, new Set())) {
+        return true;
+      }
+    }
+  }
+  return false;
+  }
 // EXAMPLE TEST
 
 // For example::
